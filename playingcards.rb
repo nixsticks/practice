@@ -40,14 +40,19 @@ class Blackjack
 		deck.cards.delete(card)
 		puts card
 		puts
-		if counter == 21
-			puts "Fine, you win."
-			Kernel.exit
-		elsif #["K", "Q", "J"].each {|element| card.include?(element)}
-			card.include? "K" or card.include? "Q" or card.include? "J" or card.include? "10"
+		if card.include? "K" or card.include? "Q" or card.include? "J" or card.include? "10"
 			counter += 10
+			if counter == 21
+				puts "BLACKJACK"
+				Kernel.exit
+			elsif counter > 21
+				puts "Your total is #{counter}."
+				puts "Sorry... you lose."
+			end
 		elsif card.include? "A"
-			if counter > 11
+			if counter == 10
+				puts "BLACKJACK"
+			elsif counter > 11
 				counter += 1
 			else
 				counter += 11
@@ -67,19 +72,15 @@ class Blackjack
 	answer = gets
 	puts "Here is your second card." if answer == "\n"
 	dealer.call
+	puts "Your total is #{counter}."
 
 	puts PICKACARD
 	answer = gets
 	puts "Here is your third card." if answer == "\n"
 	dealer.call
 
-	puts "Press enter to continue."
-	answer = gets
-	puts "Doing mathy things... \nYour total is #{counter}.\n" if answer == "\n"
-	if counter == 21
-		puts "Fine, you win."
-	else
-		puts "YOU LOSE, SUCKER!"
+	if counter < 21
+		puts "Your total is #{counter}. \nSorry... you lose."
 	end
 
 end
