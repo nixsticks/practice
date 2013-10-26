@@ -19,8 +19,8 @@ class Blackjack
 	def welcome
 		puts "\nWelcome to my casino! \nWould you like to play a game of Blackjack?"
 		answer = gets.chomp.downcase
-
-		while answer != "yes" and answer != "no" and answer != "y" and answer != "n"
+		good_answers = ["yes", "y", "no", "n"]
+		while good_answers.include?(answer) == false
 			puts "Please enter yes or no."
 			answer = gets.chomp.downcase
 		end
@@ -29,6 +29,8 @@ class Blackjack
 			when "yes", "y"
 				puts "\nHave a seat!\n\nDrawing up a chair..."
 				sleep(1)
+				puts "How many decks would you like to use?"
+				@no_of_decks = gets.chomp.to_i
 			when "no", "n"
 				puts "\nTerrible choice."
 				Kernel.exit
@@ -36,7 +38,7 @@ class Blackjack
 	end
 
 	def deal
-		deck = Deck.new(1)
+		deck = Deck.new(@no_of_decks)
 		card = deck.cards.sample
 		deck.cards.delete(card)
 		@turns += 1
@@ -46,8 +48,10 @@ class Blackjack
 			@counter += 10
 		elsif card.include? "A"
 			if counter == 10
+				@counter += 11
 				puts "BLACKJACK!"
 				@game_end = true
+				return
 			elsif counter > 11
 				@counter += 1
 			else
@@ -70,7 +74,7 @@ class Blackjack
 
 	def pick_a_card
 		while @turns < 3 and @game_end == false
-			puts "Press enter to randomly select a card."
+			puts "Press enter to receive a card."
 			answer = gets
 			deal if answer == "\n"
 		end
@@ -80,27 +84,27 @@ class Blackjack
 	def play_again
 		puts "\nWould you like to play again?"
 		answer = gets.chomp.downcase
-		while answer != "yes" and answer != "no" and answer != "y" and answer != "n"
+		good_answers = ["yes", "y", "no", "n"]
+		while good_answers.include?(answer) == false
 			puts "Please answer yes or no."
 			answer = gets.chomp.downcase
 		end
 		case answer
 			when "yes", "y"
-				@game_end = false
 				@turns = 0
 				@counter = 0
 				puts
 				pick_a_card
 			when "no", "n"
 				puts "Goodbye! Thank you for playing."
-				Kernel.exit
+				@game_end = true
 		end
 	end
 
-	attr_accessor :n2, :counter, :turns, :game_end
+	attr_accessor :no_of_decks, :counter, :turns, :game_end
 
 	def initialize
-		@n2 = 0
+		@no_of_decks = 0
 		@counter = 0
 		@turns = 0
 		@game_end = false
