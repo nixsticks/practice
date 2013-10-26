@@ -30,7 +30,12 @@ class Blackjack
 				puts "\nHave a seat!\n\nDrawing up a chair..."
 				sleep(1)
 				puts "How many decks would you like to use?"
-				@no_of_decks = gets.chomp.to_i
+				answer = gets.chomp.to_i - 0
+				while answer <= 0
+					puts "Please enter a positive integer."
+					answer = gets.chomp.to_i - 0
+				end
+				@no_of_decks = answer
 			when "no", "n"
 				puts "\nTerrible choice."
 				Kernel.exit
@@ -44,9 +49,9 @@ class Blackjack
 		@turns += 1
 		puts card
 
-		if card.include? "K" or card.include? "Q" or card.include? "J" or card.include? "10"
+		if ["K", "Q", "J", "1"].include? card[0] #card.include? "K" or card.include? "Q" or card.include? "J" or card.include? "10"
 			@counter += 10
-		elsif card.include? "A"
+		elsif card[0] == "A"
 			if counter == 10
 				@counter += 11
 				puts "BLACKJACK!"
@@ -93,6 +98,7 @@ class Blackjack
 			when "yes", "y"
 				@turns = 0
 				@counter = 0
+				@game_end = false
 				puts
 				pick_a_card
 			when "no", "n"
