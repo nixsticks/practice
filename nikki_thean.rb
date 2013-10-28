@@ -175,7 +175,7 @@ school2.remove_student("Tara")
 
 #6. Classes
 
-class School
+class School < Hash
 
 	attr_accessor :name, :location, :instructors, :students
 	attr_reader :ranking
