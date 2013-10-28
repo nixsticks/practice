@@ -57,7 +57,7 @@ instructors = school[:instructors]
 school[:founded_in] = "2013"
 
 # b. Add a student to the school's students' array.
-students.push ( {:name => "Kate", :grade => "A"} )
+students.push( {:name => "Kate", :grade => "A", :semester => "Winter"} )
 
 # c. Remove "Billy" from the students' array.
 students.slice!(1)
@@ -89,6 +89,7 @@ school.each do |key, value|
 		end
 	end
 end
+
 
 # 4. Methods
 # Note: You will need to pass the school variable to each of these methods to include it in scope.
@@ -151,6 +152,8 @@ class School
 
 	# b. Define an initialize method for the School class...etc.
 	def initialize(name, location, ranking, students, instructors)
+	# Since we were asked to put in a parameter for each instance variable, I've made it so you can pass in a hash as an argument
+	# for students and instructors and it will be placed in the array. 
 		@name = name
 		@location = location
 		@ranking = ranking
@@ -166,14 +169,14 @@ class School
 
 	# e. Create a method to add a student to the school, given a name, a grade, and a semester.
 	def add_student(name, grade, semester)
-		@students.push( {:name => name, :grade => grade, :semester => semester} )
+		students.push( {:name => name, :grade => grade, :semester => semester} )
 	end
 
 	# f. Create a method to remove a student from the school, given a name.
 	def remove_student(name)
-		@students.each do |student|
+		students.each do |student|
 			if student[:name] == name
-				@students.delete(student)
+				students.delete(student)
 			end
 		end
 	end
@@ -192,24 +195,23 @@ end
 
 # 6. Classes
 
+# a. Create a Student class.
+class Student
+
+	attr_accessor :name, :grade, :semester
+
+	def initialize(name, grade, semester)
+		@name = name
+		@grade = grade
+		@semester = semester
+	end
+
+end
+
 class School
 
 	attr_accessor :name, :location, :instructors, :students
 	attr_reader :ranking
-
-	# a. Create a Student class.
-
-	class Student
-
-		attr_accessor :name, :grade, :semester
-
-		def initialize(name, grade, semester)
-			@name = name
-			@grade = grade
-			@semester = semester
-		end
-
-	end
 
 	def initialize(name, location, ranking)
 		@name = name
@@ -217,7 +219,7 @@ class School
 		@ranking = ranking
 		@students = []
 		@instructors = []
-		# Students (and instructors) intentionally left blank so we can fill them using the add_student method and possibly later an add_instructor. 
+		# Students (and instructors) intentionally left blank so we can fill them using the add_student method and possibly later an add_instructor.
 		SCHOOLS.push(self)
 	end
 
@@ -226,23 +228,21 @@ class School
 	end
 
 	# b. Refactor your School instance methods to treat Students as an array of objects instead of an array of hashes.
-
 	def add_student(name, grade, semester)
-		@students.push(Student.new(name, grade, semester))
+		students.push(Student.new(name, grade, semester))
 	end
 
 	def remove_student(name)
-		@students.each do |student|
+		students.each do |student|
 			if student.name == name
-				@students.delete(student)
+				students.delete(student)
 			end
 		end
 	end
 
 	# c. Create a method in the School class that finds a student by name and returns the correct Student object.
-
 	def find_student(name)
-		@students.each do |student|
+		students.each do |student|
 			if student.name == name
 				puts student
 			end
@@ -252,7 +252,29 @@ class School
 	SCHOOLS = []
 
 	def School.reset
-		School::SCHOOLS.clear
+		SCHOOLS.clear
 	end
 
 end
+
+
+# 7. Self
+
+# For this section, please use the letters and answer each individually.
+# Note: in cases where self is an instance of an object just note that as the object id printed to the screen is going to be different everytime
+
+# a. What should this Class print to the screen when defined/loaded?
+# "hello"
+# Student (as in the class)
+
+# b. What should this Class print to the screen when defined/loaded?
+# Student
+
+# c. What should this Class print to the screen when defined/loaded?
+# The object id of a new instance of the Student class.
+
+# d. What should this code print to the screen when run?
+# The object id of a new instance of the Student class.
+
+# e. What should this code print to the screen when run?
+# "goodbye"
