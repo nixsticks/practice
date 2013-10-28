@@ -1,3 +1,10 @@
+# Remove class Deck from Blackjack
+# Remove the methods from initialize; put in a separate run method
+# Break down long methods into smaller ones
+# Maybe make the deck an instance variable
+# At some point, watch video on refactoring from Ben Orenstein
+
+
 class Blackjack
 
 	class Deck
@@ -42,7 +49,7 @@ class Blackjack
 	end
 
 	def deal
-		deck = Deck.new(@no_of_decks)
+		deck = Deck.new(@no_of_decks) #DO NOT instantiate here
 		card = deck.cards.sample
 		deck.cards.delete(card)
 		@turns += 1
