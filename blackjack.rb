@@ -19,8 +19,7 @@ class Blackjack
 	def welcome
 		puts "\nWelcome to my casino! \nWould you like to play a game of Blackjack?"
 		answer = gets.chomp.downcase
-		good_answers = ["yes", "y", "no", "n"]
-		while good_answers.include?(answer) == false
+		while ["yes", "y", "no", "n"].include?(answer) == false
 			puts "Please enter yes or no."
 			answer = gets.chomp.downcase
 		end
@@ -49,7 +48,7 @@ class Blackjack
 		@turns += 1
 		puts card
 
-		if ["K", "Q", "J", "1"].include? card[0] #card.include? "K" or card.include? "Q" or card.include? "J" or card.include? "10"
+		if ["K", "Q", "J", "1"].include? card[0]
 			@counter += 10
 		elsif card[0] == "A"
 			if counter == 10
@@ -89,8 +88,7 @@ class Blackjack
 	def play_again
 		puts "\nWould you like to play again?"
 		answer = gets.chomp.downcase
-		good_answers = ["yes", "y", "no", "n"]
-		while good_answers.include?(answer) == false
+		while ["yes", "y", "no", "n"].include?(answer) == false
 			puts "Please answer yes or no."
 			answer = gets.chomp.downcase
 		end
