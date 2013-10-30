@@ -14,16 +14,6 @@ class Blackjack
 		@counter = 0
 		@turns = 0
 		@game_end = false
-		
-		# welcome
-		# pick_a_card
-	end
-
-	def run
-		welcome
-		start_game
-		no_of_decks
-		pick_a_card
 	end
 
 	def welcome
@@ -45,23 +35,23 @@ class Blackjack
 		end
 	end
 
+	def enter_positive_integer
+		while @answer <= 0
+			puts "Please enter a positive integer."
+			get_input_integer
+		end
+	end
+
 	def start_game
 		get_input_string
 		enter_yes_or_no
 		case answer
 			when "yes", "y"
-				puts "\nHave a seat!\n\nDrawing up a chair..."
+				puts "\nHave a seat!\n\nDrawing up a chair...\n\n"
 				sleep(1)
 			when "no", "n"
 				puts "\nTerrible choice."
 				Kernel.exit
-		end
-	end
-
-	def enter_positive_integer
-		while answer <= 0
-			puts "Please enter a positive integer."
-			get_input_integer
 		end
 	end
 
@@ -71,11 +61,12 @@ class Blackjack
 		enter_positive_integer
 		no_of_decks = answer
 		@deck = Deck.new(no_of_decks)
+		puts
 	end
 
 	def deal
-		@card = @deck.cards.sample
-		@deck.cards.delete(card)
+		@card = deck.cards.sample
+		deck.cards.delete(card)
 		@turns += 1
 		puts card
 	end
@@ -103,17 +94,17 @@ class Blackjack
 		else
 			@counter += card[0].to_i
 		end
+		puts "Your total is #{counter}.\n\n"
 	end
 
 	def win_or_lose
 		if @counter == 21
 			puts "BLACKJACK!"
+			@turns = 3
 			@game_end = true
-		elsif @turns > 2 and counter != 21
-			puts "Your total is #{counter}. \n\nSorry, you lose."
+		elsif @turns > 2 and @counter != 21
+			puts "Sorry, you lose."
 			@game_end = true
-		else
-			puts "Your total is #{counter}.\n\n"
 		end
 	end
 
@@ -127,15 +118,26 @@ class Blackjack
 	def play_again
 		case answer
 			when "yes", "y"
-				@turns = 0
-				@counter = 0
-				@game_end = false
+				reset
 				puts
 				pick_a_card
 			when "no", "n"
 				puts "Goodbye! Thank you for playing."
 				@game_end = true
 		end
+	end
+
+	def reset
+		@turns = 0
+		@counter = 0
+		@game_end = false
+	end
+
+	def run
+		welcome
+		start_game
+		no_of_decks
+		pick_a_card
 	end
 
 end
