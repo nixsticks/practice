@@ -13,36 +13,29 @@
 # it includes a CheckedAttributes module.”
 
 
-module CheckedAttributes
-  def self.included(clazz)
-    class << clazz
-      def attr_checked(attribute, &validation)
-        define_method "#{attribute}=" do |value, &validation|
-          raise 'Invalid attribute' unless yield(value) == true
-          @attribute = value
-        end
+def add_checked_attribute(clazz, attribute)
+  eval "
+    class #{clazz}
+      def #{attribute}=(value)
+        raise 'Invalid attribute' unless value
+        @#{attribute} = value
+      end
 
-        define_method "#{attribute}" do
-          @attribute
-        end
-     end
+      def #{attribute}()
+        @#{attribute}
+      end
     end
-  end
+  "
 end
 
 
 require 'test/unit'
 
-class Person
-  include CheckedAttributes
-
-  attr_checked :age do |v|
-    v >= 18
-  end
-end
+class Person; end
 
 class TestCheckedAttribute < Test::Unit::TestCase
   def setup
+    add_checked_attribute(Person, :age)
     @bob = Person.new
   end
 
@@ -51,9 +44,15 @@ class TestCheckedAttribute < Test::Unit::TestCase
     assert_equal 20, @bob.age
   end
 
-  def test_refuses_invalid_Values
+  def test_refuses_nil_values
     assert_raises RuntimeError, 'Invalid attribute' do
-      @bob.age = 17
+      @bob.age = nil
+    end
+  end
+
+  def test_refuses_false_values
+    assert_raises RuntimeError, 'Invalid attribute' do
+      @bob.age = false
     end
   end
 end

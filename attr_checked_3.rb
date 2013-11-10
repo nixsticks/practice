@@ -13,36 +13,28 @@
 # it includes a CheckedAttributes module.”
 
 
-module CheckedAttributes
-  def self.included(clazz)
-    class << clazz
-      def attr_checked(attribute, &validation)
-        define_method "#{attribute}=" do |value, &validation|
-          raise 'Invalid attribute' unless yield(value) == true
-          @attribute = value
-        end
+def add_checked_attribute(clazz, attribute, &validation)
+  clazz.class_eval do
+    define_method "#{attribute}=" do |value, &validation|
+      raise 'Invalid attribute' unless yield(value) == true
+      @attribute = value
+    end
 
-        define_method "#{attribute}" do
-          @attribute
-        end
-     end
+    define_method "#{attribute}" do
+      @attribute
     end
   end
 end
 
+# Note: in the book, they used raise 'Invalid attribute' unless validation.call(value)
 
 require 'test/unit'
 
-class Person
-  include CheckedAttributes
-
-  attr_checked :age do |v|
-    v >= 18
-  end
-end
+class Person; end
 
 class TestCheckedAttribute < Test::Unit::TestCase
   def setup
+    add_checked_attribute(Person, :age) {|v| v >= 18 }
     @bob = Person.new
   end
 

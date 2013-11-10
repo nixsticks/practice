@@ -12,20 +12,17 @@
 # Instead, a class should gain access to attr_checked() only when 
 # it includes a CheckedAttributes module.”
 
+# Fourth step: Make a Class Macro that's available to all classes.
 
-module CheckedAttributes
-  def self.included(clazz)
-    class << clazz
-      def attr_checked(attribute, &validation)
-        define_method "#{attribute}=" do |value, &validation|
-          raise 'Invalid attribute' unless yield(value) == true
-          @attribute = value
-        end
+class Class
+  def attr_checked(attribute, &validation)
+    define_method "#{attribute}=" do |value, &validation|
+      raise 'Invalid attribute' unless yield(value) == true
+      @attribute = value
+    end
 
-        define_method "#{attribute}" do
-          @attribute
-        end
-     end
+    define_method "#{attribute}" do
+      @attribute
     end
   end
 end
@@ -34,8 +31,6 @@ end
 require 'test/unit'
 
 class Person
-  include CheckedAttributes
-
   attr_checked :age do |v|
     v >= 18
   end

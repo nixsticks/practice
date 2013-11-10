@@ -12,20 +12,27 @@
 # Instead, a class should gain access to attr_checked() only when 
 # it includes a CheckedAttributes module.”
 
+# Note: When I solved this myself I used the class << clazz method and did not create 
+# the module Attributes. That also worked.
+# I actually like that one better.
+# But I suppose this must be better.
+
 
 module CheckedAttributes
   def self.included(clazz)
-    class << clazz
-      def attr_checked(attribute, &validation)
-        define_method "#{attribute}=" do |value, &validation|
-          raise 'Invalid attribute' unless yield(value) == true
-          @attribute = value
-        end
+    clazz.extend(Attributes)
+  end
+end
 
-        define_method "#{attribute}" do
-          @attribute
-        end
-     end
+module Attributes
+  def attr_checked(attribute, &validation)
+    define_method "#{attribute}=" do |value, &validation|
+      raise 'Invalid attribute' unless yield(value) == true
+      @attribute = value
+    end
+
+    define_method "#{attribute}" do
+      @attribute
     end
   end
 end
